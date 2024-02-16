@@ -142,7 +142,7 @@ export const checkResults = (session,period) =>
 }
 
 export const checkComparativeData = async (session,period) => 
-{
+{ 
   const aggregates = ["production","intermediateConsumptions","fixedCapitalConsumptions","netValueAdded"];
   const scales = ["area","division"];
   const series = ["history"]; // "trend","target"
@@ -153,7 +153,10 @@ export const checkComparativeData = async (session,period) =>
     for (let aggregate of aggregates) {
       for (let scale of scales) {
         for (let serie of series) {
+          
           if (!session.comparativeData?.[aggregate]?.[scale]?.[serie]?.data?.[indic]) {
+
+
             return false;
           }
         }

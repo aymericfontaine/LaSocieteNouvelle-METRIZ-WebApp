@@ -166,9 +166,9 @@ export const getComparativeDataChanges = (prevData, currData) => {
   const metaScales = ["area", "division"];
 
   const metaSeries = {
-    history: { enpoint: "macro_fpt_a88" },
-    trend: { enpoint: "macro_fpt_trd_a88" },
-    target: { enpoint: "macro_fpt_tgt_a88" },
+    history: { enpoint: "macro_fpt" },
+    trend: { enpoint: "macro_fpt_trd" },
+    target: { enpoint: "macro_fpt_tgt" },
   };
 
   const changes = {};
