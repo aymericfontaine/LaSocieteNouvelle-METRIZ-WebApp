@@ -106,7 +106,7 @@ const buildChartData = (session,datasetOptions) =>
     type: "line",
     fill: false,
     tension: 0.3,
-    borderColor : trendChartColors.previous,
+    borderColor : legalUnitData.length == 1 ? trendChartColors.legalunit : trendChartColors.previous,
     borderWidth: (context) => {
       return context.dataset.type === 'line' ? 4 : 1;
     }, 
@@ -273,7 +273,7 @@ const buildBranchTargetData = (
   let lastYearHistoricalData = historicalData.at(-1).year;
 
   const data = comparativeData[aggregate].division.target.data[indic]
-    .filter((item) => item.path == path)
+    .filter((item) => item.target == path)
     .filter((item) => item.year > lastYearHistoricalData)
     .concat([historicalData.at(-1)])
     .sort((a, b) => a.year - b.year);
@@ -358,13 +358,14 @@ const buildChartOptions = (printOptions,datasetOptions,chartData) =>
           },
           generateLabels: function (chart) {
             const dataset = chart.data.datasets;
+            console.log('labels', dataset)
             return dataset
               .map((data, i) => ({
                 hidden: !chart.getDataVisibility(i),
                 index: i,
                 lineWidth: 3,
-                lineDashOffset: i === 1 ? 10 : 0,
-                lineDash: i === 1 ? [6, 3] : [],
+                lineDashOffset: data.label === 'Tendance' ? 10 : 0,
+                lineDash:  data.label === 'Tendance' ? [6, 3] : [],
                 order: data.order,
                 pointStyle: "line",
                 strokeStyle: data.borderColor,
