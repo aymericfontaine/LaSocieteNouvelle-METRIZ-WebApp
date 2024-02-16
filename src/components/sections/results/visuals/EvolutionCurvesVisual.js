@@ -9,25 +9,25 @@ import Select from "react-select";
 import { TrendChart } from "../charts/TrendChart";
 
 // Lib
-import metaIndics from "/lib/indics";
 import metaTargets from "/lib/target";
 import metaTrends from "/lib/trend.json";
 
 // Styles
 import { customSelectStyles } from "/config/customStyles";
+import { formatDateFR } from "../../../../utils/periodsUtils";
 
 /* ---------- EVOLUTION CURVES VISUAL ---------- */
 
 /** Component to visualize evolution of footprint over years (legal unit & comparative division)
- *  
+ *
  *  Props :
  *    - session
  *    - indic
  *  (no period -> show on all year periods)
- * 
+ *
  *  Params (in component) :
  *    - aggregate
- * 
+ *
  */
 
 const graphOptions = [
@@ -37,19 +37,12 @@ const graphOptions = [
   { label: "Valeur ajoutée nette", value: "netValueAdded" },
 ];
 
-export const EvolutionCurvesVisual = ({
-  session,
-  indic
-}) => {
-
-  const {
-    comparativeData
-  } = session;
+export const EvolutionCurvesVisual = ({ session, indic }) => {
+  const { comparativeData } = session;
 
   const [showedAggregate, setShowedAggregate] = useState("production");
 
   useEffect(() => {
-
     setShowedAggregate("production");
   }, [indic]);
 
@@ -71,7 +64,9 @@ export const EvolutionCurvesVisual = ({
           <Select
             styles={customSelectStyles}
             className="mb-4"
-            value={graphOptions.find((option) => option.value==showedAggregate)}
+            value={graphOptions.find(
+              (option) => option.value == showedAggregate
+            )}
             options={graphOptions}
             onChange={changeShowedAggregate}
           />
@@ -82,16 +77,16 @@ export const EvolutionCurvesVisual = ({
               session={session}
               datasetOptions={{
                 aggregate: showedAggregate,
-                indic
+                indic,
               }}
               printOptions={{
-                printMode: false
+                printMode: false,
               }}
             />
           </div>
         </div>
       </Col>
-      
+
       <Col>
         <div className="box ">
           <h4>Notes</h4>
@@ -107,23 +102,35 @@ export const EvolutionCurvesVisual = ({
                 l'économie nationale, ses interactions avec l’extérieur et de la
                 dynamique des prix par branche.
               </p>
-              <p className="small mt-3">
+              <p className="small mt-3 mb-0">
                 Source : {metaTrends[indic].source}
+              </p>
+              <p className="small ">
+                Dernière actualisation le{" "}
+                {formatDateFR(
+                  comparativeData.production.division.trend.data[indic][0]
+                    .lastupdate
+                )}
               </p>
             </>
           )}
-          {comparativeData.production.division.target.data[indic].length>0 && (
+          {comparativeData.production.division.target.data[indic].length >
+            0 && (
             <>
               <h5>Objectif de la branche :</h5>
               {metaTargets[indic].info}
-              <p className="small mt-3">
-                Source : {metaTargets[indic].source}
+              <p className="small mt-3  mb-0">Source : {metaTargets[indic].source}</p>
+              <p className="small ">
+                Dernière actualisation le{" "}
+                {formatDateFR(
+                  comparativeData.production.division.target.data[indic][0]
+                    .lastupdate
+                )}
               </p>
             </>
           )}
         </div>
       </Col>
-
     </Row>
   );
-}
+};

@@ -54,6 +54,13 @@ export const getPrevPeriod = (periods,currPeriod) =>
 
 /* -------------------------- DATES -------------------------- */
 
+
+export const formatDateFR = (dateToFormat) => {
+  const date = new Date(dateToFormat);
+  const options = { year: 'numeric', month: 'numeric', day: 'numeric'};
+  return date.toLocaleDateString('fr-FR', options);
+}
+
 /** CURRENT DATE
  *    get current date
  *    format : dd-MM-yyyy hh:mm

@@ -44,7 +44,6 @@ export const TrendChart = ({
   printOptions
 }) => {
 
-  if (datasetOptions.indic=="wat") console.log(datasetOptions);
   // --------------------------------------------------
   // Data
 
@@ -358,7 +357,6 @@ const buildChartOptions = (printOptions,datasetOptions,chartData) =>
           },
           generateLabels: function (chart) {
             const dataset = chart.data.datasets;
-            console.log('labels', dataset)
             return dataset
               .map((data, i) => ({
                 hidden: !chart.getDataVisibility(i),
