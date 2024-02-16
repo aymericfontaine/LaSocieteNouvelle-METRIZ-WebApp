@@ -2,7 +2,7 @@
 
 // React
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import Select from "react-select";
 
 // Chart
@@ -15,6 +15,9 @@ import metaTrends from "/lib/trend.json";
 // Styles
 import { customSelectStyles } from "/config/customStyles";
 import { formatDateFR } from "../../../../utils/periodsUtils";
+
+// Modals
+import { Loader } from "../../../modals/Loader";
 
 /* ---------- EVOLUTION CURVES VISUAL ---------- */
 
@@ -37,11 +40,12 @@ const graphOptions = [
   { label: "Valeur ajoutée nette", value: "netValueAdded" },
 ];
 
-export const EvolutionCurvesVisual = ({ session, indic }) => {
+export const EvolutionCurvesVisual = ({ session, indic, period }) => {
   const { comparativeData } = session;
 
   const [showedAggregate, setShowedAggregate] = useState("production");
-
+  const [isLoading, setIsLoading] = useState(false);
+  
   useEffect(() => {
     setShowedAggregate("production");
   }, [indic]);
@@ -53,6 +57,13 @@ export const EvolutionCurvesVisual = ({ session, indic }) => {
   };
 
   // --------------------------------------------------
+ 
+  const updateComparativeData = async() => {
+
+    setIsLoading(true);
+      await session.comparativeData.fetchComparativeData(session.validations[period.periodKey]);
+    setIsLoading(false);
+  }
 
   const title = "";
 
@@ -83,6 +94,9 @@ export const EvolutionCurvesVisual = ({ session, indic }) => {
                 printMode: false,
               }}
             />
+          </div>
+          <div className="text-end mt-2">
+            <Button variant="secondary" onClick={updateComparativeData}><i className="bi bi-arrow-repeat"></i> Actualiser les données de la branche</Button>
           </div>
         </div>
       </Col>
@@ -119,7 +133,9 @@ export const EvolutionCurvesVisual = ({ session, indic }) => {
             <>
               <h5>Objectif de la branche :</h5>
               {metaTargets[indic].info}
-              <p className="small mt-3  mb-0">Source : {metaTargets[indic].source}</p>
+              <p className="small mt-3  mb-0">
+                Source : {metaTargets[indic].source}
+              </p>
               <p className="small ">
                 Dernière actualisation le{" "}
                 {formatDateFR(
@@ -131,6 +147,9 @@ export const EvolutionCurvesVisual = ({ session, indic }) => {
           )}
         </div>
       </Col>
+      {isLoading && (
+        <Loader title={"Récupération des données de comparaison ..."} />
+      )}
     </Row>
   );
 };
