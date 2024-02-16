@@ -30,7 +30,7 @@ export const DataUpdater = ({
   const handleRefresh = async () => 
   {
     setIsLoading(true);
-
+    // To fix
     const updatedSession = new Session(session);
     await refetchData(updatedSession);
     setUpdatedSession(updatedSession);

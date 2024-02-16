@@ -76,7 +76,7 @@ export class ComparativeData {
         divisions,
         indics,
       };
-      console.log('params', params);
+  
       // fetch data
       const [history, trend, target] = await Promise.all([
         this.fetchMacrodata(metaSeries.history.enpoint, params),

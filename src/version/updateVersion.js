@@ -45,4 +45,6 @@ export const updateVersion = async (sessionData) =>
   if (/^2/.test(sessionData.version)) {
     await updater_to_3_0_0(sessionData);
   }
+
+  // to do : update to version 3.0.1
 };
