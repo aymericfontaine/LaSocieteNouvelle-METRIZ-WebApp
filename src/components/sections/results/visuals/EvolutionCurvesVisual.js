@@ -45,7 +45,7 @@ export const EvolutionCurvesVisual = ({ session, indic, period }) => {
 
   const [showedAggregate, setShowedAggregate] = useState("production");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   useEffect(() => {
     setShowedAggregate("production");
   }, [indic]);
@@ -57,13 +57,14 @@ export const EvolutionCurvesVisual = ({ session, indic, period }) => {
   };
 
   // --------------------------------------------------
- 
-  const updateComparativeData = async() => {
 
+  const updateComparativeData = async () => {
     setIsLoading(true);
-      await session.comparativeData.fetchComparativeData(session.validations[period.periodKey]);
+    await session.comparativeData.fetchComparativeData(
+      session.validations[period.periodKey]
+    );
     setIsLoading(false);
-  }
+  };
 
   const title = "";
 
@@ -95,8 +96,35 @@ export const EvolutionCurvesVisual = ({ session, indic, period }) => {
               }}
             />
           </div>
-          <div className="text-end mt-2">
-            <Button variant="secondary" onClick={updateComparativeData}><i className="bi bi-arrow-repeat"></i> Actualiser les données de la branche</Button>
+          <hr></hr>
+          <div className="mt-4 d-flex justify-content-between align-items-center">
+            <div>
+            <h6>Dernière actualisation :</h6>
+              <div  className="small d-flex align-items-center">
+              <p className="mb-0">
+                {" "}
+                Tendance de la branche :
+                {formatDateFR(
+                  comparativeData.production.division.trend.data[indic][0]
+                    .lastupdate
+                )}
+              </p>
+                <p className="mb-0 ms-2">
+                  Objectif de la branche :
+                  {formatDateFR(
+                    comparativeData.production.division.target.data[indic][0]
+                      .lastupdate
+                  )}
+                </p>
+              </div>
+          
+            
+            </div>
+
+            <Button variant="secondary" onClick={updateComparativeData}>
+              <i className="bi bi-arrow-repeat"></i> Actualiser les données de
+              la branche
+            </Button>
           </div>
         </div>
       </Col>
@@ -119,29 +147,15 @@ export const EvolutionCurvesVisual = ({ session, indic, period }) => {
               <p className="small mt-3 mb-0">
                 Source : {metaTrends[indic].source}
               </p>
-              <p className="small ">
-                Dernière actualisation le{" "}
-                {formatDateFR(
-                  comparativeData.production.division.trend.data[indic][0]
-                    .lastupdate
-                )}
-              </p>
             </>
           )}
           {comparativeData.production.division.target.data[indic].length >
             0 && (
             <>
-              <h5>Objectif de la branche :</h5>
+              <h5 className="mt-4">Objectif de la branche :</h5>
               {metaTargets[indic].info}
               <p className="small mt-3  mb-0">
                 Source : {metaTargets[indic].source}
-              </p>
-              <p className="small ">
-                Dernière actualisation le{" "}
-                {formatDateFR(
-                  comparativeData.production.division.target.data[indic][0]
-                    .lastupdate
-                )}
               </p>
             </>
           )}

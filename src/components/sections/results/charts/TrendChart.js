@@ -146,7 +146,6 @@ const buildChartData = (session,datasetOptions) =>
 
   // --------------------------------------------------
   // Division - Trend
-
   if (branchHistoricalData.length > 0)
   {
     const branchTrendData = buildBranchTrendData(
@@ -272,11 +271,11 @@ const buildBranchTargetData = (
   let lastYearHistoricalData = historicalData.at(-1).year;
 
   const data = comparativeData[aggregate].division.target.data[indic]
-    .filter((item) => item.target == path)
+    .filter((item) => item.target == path ||  item.path == path) // item.path (case for version 3.0.0)
     .filter((item) => item.year > lastYearHistoricalData)
     .concat([historicalData.at(-1)])
     .sort((a, b) => a.year - b.year);
-
+  console.log(comparativeData[aggregate].division.target.data[indic])
   return data;
 }
 
