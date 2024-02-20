@@ -275,7 +275,7 @@ const buildBranchTargetData = (
     .filter((item) => item.year > lastYearHistoricalData)
     .concat([historicalData.at(-1)])
     .sort((a, b) => a.year - b.year);
-  console.log(comparativeData[aggregate].division.target.data[indic])
+
   return data;
 }
 
