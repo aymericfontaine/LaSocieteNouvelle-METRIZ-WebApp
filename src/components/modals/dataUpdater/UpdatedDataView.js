@@ -9,15 +9,19 @@ import metaIndics from "/lib/indics";
 
 // Utils
 import { downloadSession, isObjEmpty } from "/src/utils/Utils";
-import { getComparativeDataChanges, getInitialStatesChanges, getProductionFootprintChanges, getProvidersChanges } from "./utils";
+import {
+  getComparativeDataChanges,
+  getInitialStatesChanges,
+  getProductionFootprintChanges,
+  getProvidersChanges,
+} from "./utils";
 
 const UpdateDataView = ({
   prevSession,
   updatedSession,
   handleCloseUpdatedSession,
-  handleClose
+  handleClose,
 }) => {
-
   const [providersChanges, setProvidersChanges] = useState([]);
   const [initialStatesChanges, setInitialStatesChanges] = useState([]);
   const [resultsChanges, setResultsChanges] = useState([]);
@@ -25,7 +29,6 @@ const UpdateDataView = ({
   const [showButton, setShowButton] = useState(false);
   const [isSessionUpdated, setIsSessionUpdated] = useState(false);
   const [isUptodate, setIsuptodate] = useState(false);
-
 
   useEffect(async () => {
     // providers changes
@@ -44,18 +47,18 @@ const UpdateDataView = ({
       updatedSession.financialData.stocks,
       prevSession.financialData.stocks
     );
-    setInitialStatesChanges([...immobilisationsChanges,...stocksChanges]);
+    setInitialStatesChanges([...immobilisationsChanges, ...stocksChanges]);
 
     const comparativeDataChanges = getComparativeDataChanges(
       prevSession.comparativeData,
       updatedSession.comparativeData
     );
     setComparativeDataChanges(comparativeDataChanges);
-  
+
     if (
       isObjEmpty(providersChanges) &&
       isObjEmpty(initialStatesChanges) &&
-     !comparativeDataChanges
+      !comparativeDataChanges
     ) {
       setShowButton(false);
       setIsuptodate(true);
@@ -63,12 +66,10 @@ const UpdateDataView = ({
       setShowButton(true);
       setIsuptodate(false);
     }
-  }, [prevSession,updatedSession]);
-
+  }, [prevSession, updatedSession]);
 
   // re-compute footprints
-  const applyUpdates = async () => 
-  {
+  const applyUpdates = async () => {
     // update footprints
     for (let period of updatedSession.availablePeriods) {
       await updatedSession.updateFootprints(period);
@@ -78,19 +79,23 @@ const UpdateDataView = ({
     const resultsChanges = [];
     for (let period of prevSession.availablePeriods) {
       const resultsChangesOnPeriod = getProductionFootprintChanges(
-        updatedSession.financialData.mainAggregates.production.periodsData[period.periodKey].footprint,
-        prevSession.financialData.mainAggregates.production.periodsData[period.periodKey].footprint
+        updatedSession.financialData.mainAggregates.production.periodsData[
+          period.periodKey
+        ].footprint,
+        prevSession.financialData.mainAggregates.production.periodsData[
+          period.periodKey
+        ].footprint
       );
       resultsChanges.push(...resultsChangesOnPeriod);
     }
     setResultsChanges(resultsChanges);
     setIsSessionUpdated(true);
-  }
+  };
 
   if (isSessionUpdated) {
     return (
       <>
-        <p>Les données ont bien été mises à jour ! </p>
+        <p className="text-center">Les données ont bien été mises à jour ! </p>
         {Object.keys(resultsChanges).length > 0 &&
           Object.entries(resultsChanges).map(([key, value]) => {
             const indics = Object.keys(value);
@@ -99,7 +104,7 @@ const UpdateDataView = ({
               const currValue = value[indic].value.currValue;
               const prevValue = value[indic].value.prevValue;
               const diff = Math.abs((currValue - prevValue) / prevValue);
-  
+
               if (prevValue !== null && currValue !== null && diff >= 0.1) {
                 items.push(
                   <li key={index}>
@@ -125,18 +130,24 @@ const UpdateDataView = ({
               </div>
             );
           })}
-        <Button
-          variant="secondary"
-          className="me-1 my-2"
-          onClick={() => downloadSession(updatedSession)}
-        >
-          Sauvegarder ma session
-        </Button>
-        <Button variant="primary" className="my-2" onClick={handleCloseUpdatedSession}>
-          Reprendre mon analyse
-        </Button>
+        <div className="text-center">
+          <Button
+            variant="secondary"
+            className="me-1 my-2"
+            onClick={() => downloadSession(updatedSession)}
+          >
+            Sauvegarder ma session
+          </Button>
+          <Button
+            variant="primary"
+            className="my-2"
+            onClick={handleCloseUpdatedSession}
+          >
+            Reprendre mon analyse
+          </Button>
+        </div>
       </>
-    )
+    );
   } else {
     return (
       <>
@@ -146,7 +157,7 @@ const UpdateDataView = ({
               <i className="success bi bi-check2-circle"></i> Toutes les données
               de votre session sont à jour. Vous pouvez reprendre votre analyse.
             </p>
-            <div >
+            <div>
               <Button
                 variant="primary"
                 size="md"
@@ -158,9 +169,11 @@ const UpdateDataView = ({
             </div>
           </div>
         ) : (
-          <p className="mb-3 ">Des données plus récentes sont disponibles :</p>
+          <p className="mb-3 text-center ">
+            Des données plus récentes sont disponibles :
+          </p>
         )}
-    
+
         {providersChanges && !isObjEmpty(providersChanges) && (
           <FootprintPreview data={providersChanges} label={"fournisseurs"} />
         )}
@@ -172,44 +185,38 @@ const UpdateDataView = ({
           />
         )}
         {comparativeDatachanges && !isObjEmpty(comparativeDatachanges) && (
-          <div className="small my-3 pt-3">
-            <h4 className="h6">
-              <i className="text-info me-1 bi bi-arrow-repeat"></i>Données
-              comparatives
-            </h4>
+          <div className="small my-3">
+            <h6>
+              <i className="me-1 bi bi-arrow-repeat"></i>Données comparatives
+            </h6>
             <p>Les données de comparaisons vont être mises à jour.</p>
           </div>
         )}
 
         {showButton && (
-          <Button
-            variant="secondary"
-            className="mt-2"
-            onClick={() =>
-              applyUpdates(prevSession, updatedSession)
-            }
-          >
-            Mettre à jour ma session
-          </Button>
+          <div className="text-center">
+            <Button
+              variant="secondary"
+              className="mt-3"
+              onClick={() => applyUpdates(prevSession, updatedSession)}
+            >
+              Mettre à jour ma session
+            </Button>
+          </div>
         )}
       </>
-    )
+    );
   }
-}
-
-
-
-
+};
 
 const FootprintPreview = ({ data, label }) => {
   const nb = Object.entries(data).length;
 
   return (
-    <div className="small border-top my-3 pt-3">
-      <h4 className="h6">
-        {" "}
-        <i className="text-info me-1 bi bi-arrow-repeat"></i>Données des {label}
-      </h4>
+    <div className="small mb-3">
+      <h6>
+        <i className=" me-1 bi bi-arrow-repeat"></i>Données des {label}
+      </h6>
       {nb +
         " " +
         (nb > 1 ? "empreintes vont" : "empreinte va") +

@@ -122,7 +122,7 @@ export const EvolutionCurvesVisual = ({ session, indic, period }) => {
               </div>
             </div>
 
-            <Button variant="secondary" onClick={updateComparativeData}>
+            <Button variant="secondary" size="sm" onClick={updateComparativeData}>
               <i className="bi bi-arrow-repeat"></i> Actualiser les données de
               la branche
             </Button>

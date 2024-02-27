@@ -29,10 +29,15 @@ export const DataUpdater = ({
 
   const handleRefresh = async () => 
   {
+
     setIsLoading(true);
-    // To fix
-    const updatedSession = new Session(session);
+
+    const updatedSessionCopy = JSON.parse(JSON.stringify(session));
+
+    const updatedSession = new Session(updatedSessionCopy);
     await refetchData(updatedSession);
+
+
     setUpdatedSession(updatedSession);
     setIsLoading(false);
     setIsDatafetched(true);
@@ -50,9 +55,9 @@ export const DataUpdater = ({
   }
 
   return (
-    <Modal show={show} size="lg" onHide={handleClose}>
+    <Modal show={show} size="md" onHide={handleClose}>
       <Modal.Header closeLabel="Fermer">
-        <h3>Actualisation des données...</h3>
+      <Modal.Title as={"h5"}>Actualisation des données...</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Image

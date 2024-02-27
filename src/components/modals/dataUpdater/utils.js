@@ -185,12 +185,13 @@ export const getComparativeDataChanges = (prevData, currData) => {
 
         const prevDataset = prevData[aggregateKey][scale][serie].data;
         const currDataset = currData[aggregateKey][scale][serie].data;
+    
 
         // Compare each indic in the dataset
         for (const indic of Object.keys(prevDataset)) {
           const prevDataArray = prevDataset[indic];
           const currDataArray = currDataset[indic];
-
+        
           // Check if the arrays have the same length
           if (prevDataArray.length !== currDataArray.length) {
             changes[aggregateKey][scale][serie].push({
@@ -199,9 +200,10 @@ export const getComparativeDataChanges = (prevData, currData) => {
           } else {
             // Compare each element in the array
             for (let i = 0; i < prevDataArray.length; i++) {
+           
               if (
-                prevDataArray[i].year !== currDataArray[i].year ||
-                prevDataArray[i].value !== currDataArray[i].value
+                prevDataArray[i].year == currDataArray[i].year &&
+                prevDataArray[i].value != currDataArray[i].value
               ) {
                 changes[aggregateKey][scale][serie].push({
                   indic,
