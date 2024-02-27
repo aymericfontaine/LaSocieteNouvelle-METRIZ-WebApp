@@ -86,8 +86,9 @@ export const getProvidersChanges = async (
     for (let indic of indics) {
       const currIndicator = currProvider.footprint.indicators[indic];
       const prevIndicator = prevProvider.footprint.indicators[indic];
-   
-     if (JSON.stringify(currIndicator)!==JSON.stringify(prevIndicator)) {
+ 
+     if (currIndicator.value !== prevIndicator.value || currIndicator.uncertainty !== prevIndicator.uncertainty) {
+     
       changes.push({
         providerId: currProvider.id,
         prevData: prevIndicator,
@@ -118,8 +119,9 @@ export const getInitialStatesChanges = async (
       for (let indic of indics) {
         const currIndicator = currAccount.initialState.footprint.indicators[indic];
         const prevIndicator = prevAccount.initialState.footprint.indicators[indic];
-  
-       if (JSON.stringify(currIndicator)!==JSON.stringify(prevIndicator)) {
+    
+
+       if (currIndicator.value !== prevIndicator.value || currIndicator.uncertainty !== prevIndicator.uncertainty) {
         changes.push({
           accountNum: currAccount.accountNum,
           prevData: prevIndicator,
