@@ -99,26 +99,27 @@ export const EvolutionCurvesVisual = ({ session, indic, period }) => {
           <hr></hr>
           <div className="mt-4 d-flex justify-content-between align-items-center">
             <div>
-            <h6>Dernière actualisation :</h6>
-              <div  className="small d-flex align-items-center">
-              <p className="mb-0">
-                {" "}
-                Tendance de la branche :
-                {formatDateFR(
-                  comparativeData.production.division.trend.data[indic][0]
-                    .lastupdate
-                )}
-              </p>
-                <p className="mb-0 ms-2">
-                  Objectif de la branche :
+              <h6>Dernière actualisation :</h6>
+              <div className="small d-flex align-items-center">
+                <p className="mb-0">
+                  {" "}
+                  Tendance de la branche :
                   {formatDateFR(
-                    comparativeData.production.division.target.data[indic][0]
+                    comparativeData.production.division.trend.data[indic][0]
                       .lastupdate
                   )}
                 </p>
+                {comparativeData.production.division.target.data[indic].length >
+                  0 && (
+                  <p className="mb-0 ms-2">
+                    Objectif de la branche :
+                    {formatDateFR(
+                      comparativeData.production.division.target.data[indic][0]
+                        ?.lastupdate
+                    )}
+                  </p>
+                )}
               </div>
-          
-            
             </div>
 
             <Button variant="secondary" onClick={updateComparativeData}>
