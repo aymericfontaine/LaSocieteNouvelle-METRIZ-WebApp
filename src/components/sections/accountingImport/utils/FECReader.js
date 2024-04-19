@@ -32,6 +32,27 @@ const columnsFEC = [
   "Idevise",
 ];
 
+const columnsFECWithDirection = [
+  "JournalCode",
+  "JournalLib",
+  "EcritureNum",
+  "EcritureDate",
+  "CompteNum",
+  "CompteLib",
+  "CompAuxNum",
+  "CompAuxLib",
+  "PieceRef",
+  "PieceDate",
+  "EcritureLib",
+  "Montant",
+  "Sens",
+  "EcritureLet",
+  "DateLet",
+  "ValidDate",
+  "Montantdevise",
+  "Idevise",
+];
+
 /* ---------------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------------------- FEC READER -------------------------------------------------- */
 /* ---------------------------------------------------------------------------------------------------------------- */
@@ -112,9 +133,18 @@ export async function FECFileReader(content) {
     .split(separator);
 
   // Vérification des colonnes
-  const missingColumns = columnsFEC.filter(column => !header.includes(column));
-  if (missingColumns.length > 0) {
-    throw `Fichier erroné (libellé(s) manquant(s) : ${missingColumns.join(', ')})`;
+  // On teste le format avec "Montant" et "Sens" en priorité
+  var format = "default";
+  var missingColumns = columnsFECWithDirection.filter(column => !header.includes(column));
+
+  if (missingColumns.length == 0) {
+    format = "withDirection";
+  } else {
+    // Si le format n'est pas bon, on teste avec "Debit" et "Credit"
+    missingColumns = columnsFEC.filter(column => !header.includes(column));
+    if (missingColumns.length > 0) {
+      throw `Fichier erroné (libellé(s) manquant(s) : ${missingColumns.join(', ')})`;
+    }
   }
 
   // Construction de l'index des colonnes
@@ -188,7 +218,12 @@ export async function FECFileReader(content) {
 
       // FEC id
       if (dataFEC.id.length < 15) {
-        dataFEC.id = dataFEC.id + buildId(parseAmount(rowData.Debit) + parseAmount(rowData.Credit));
+        if (format == "withDirection") {
+          const amount = parseAmount(rowData.Montant);
+          dataFEC.id = rowData.Sens == "D" ? dataFEC.id - buildId(amount) : dataFEC.id + buildId(amount);
+        } else {
+          dataFEC.id = dataFEC.id + buildId(parseAmount(rowData.Debit) + parseAmount(rowData.Credit));
+        }
       }
 
       // -------------------------------------------------- //
